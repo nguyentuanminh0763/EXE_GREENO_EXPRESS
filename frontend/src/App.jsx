@@ -10,7 +10,6 @@ import { MessageCircle } from 'lucide-react';
 
 export default function App() {
   const { loading } = useContext(AuthContext);
-  const [showChat, setShowChat] = React.useState(false);
 
   if (loading) return <LoadingSpinner />;
 
@@ -28,19 +27,6 @@ export default function App() {
         draggable
         pauseOnHover
       />
-      {/* Nút nổi mở chat */}
-      <button
-        onClick={() => setShowChat(true)}
-        className="fixed bottom-24 right-4 bg-blue-600 text-white rounded-full shadow-lg p-4 z-50 hover:bg-blue-700 flex items-center justify-center"
-        style={{ width: 56, height: 56 }}
-        aria-label="Mở chat với admin"
-      >
-        <MessageCircle size={28} />
-      </button>
-      {/* Cửa sổ chat */}
-      {showChat && (
-        <ChatWindow onClose={() => setShowChat(false)} />
-      )}
     </>
   );
 }

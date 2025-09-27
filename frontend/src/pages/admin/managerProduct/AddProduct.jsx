@@ -4,11 +4,7 @@ import SidebarAdmin from "~/components/SidebarAdmin";
 import { useNavigate } from "react-router-dom";
 
 const CATEGORY_OPTIONS = [
-  "Clothing",
-  "Leashes and Muzzles",
-  "Feeding Tools",
-  "Pet Toys",
-  "Beds and Mats"
+  "nước rửa chén"
 ];
 
 const initialState = {

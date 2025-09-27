@@ -3,6 +3,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay } from "swiper/modules";
 import "swiper/css";
 import womanImage from '~/assets/woman.png'
+import { Link, NavLink, useNavigate } from "react-router-dom";
 
 export default function HeroCarousel() {
   return (
@@ -37,12 +38,18 @@ export default function HeroCarousel() {
                 <button
                   className="px-8 py-4 rounded-xl bg-[#1BA24A] hover:bg-[#159341] text-white font-semibold shadow-sm"
                 >
-                  Mua ngay
+                  <Link to="/shop">
+                   Mua ngay
+                  </Link>
+                 
                 </button>
                 <button
                   className="px-8 py-4 rounded-xl border-2 border-[#1BA24A] text-[#1BA24A] hover:bg-[#E6F8ED] font-semibold"
                 >
-                  Tìm hiểu thêm
+                  <Link to="/about">
+                    Tìm hiểu thêm
+                  </Link>
+                 
                 </button>
               </div>
             </div>

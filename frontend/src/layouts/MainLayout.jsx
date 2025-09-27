@@ -29,7 +29,7 @@ export default function MainLayout({ children }) {
       {/* 👇 Đẩy nội dung xuống để tránh bị che */}
       <main className="flex-1 pt-[80px] bg-gray-50">
         {children}
-        <BookingFloatingButton />
+        {/* <BookingFloatingButton /> */}
       </main>
 
       {/* Footer luôn ở dưới cùng */}
