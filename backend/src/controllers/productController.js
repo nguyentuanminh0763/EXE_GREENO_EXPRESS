@@ -101,7 +101,7 @@ const getAllProducts = async (req, res) => {
   try {
     const { category, name, page = 1, limit = 8, sort = 'name_asc' } = req.query
 
-    const query = {};
+    const query = {isVisible: true};
     if (category) query.category = category;
     if (name) query.name = new RegExp(name, 'i');
 

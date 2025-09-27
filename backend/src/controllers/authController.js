@@ -31,11 +31,12 @@ const login = async (req, res) => {
 
   const currentUser = await User.findOne({ phone })
 
-  if (!currentUser.isActive) {
-    return res.status(StatusCodes.FORBIDDEN).json({ message: 'Tài khoản của bạn đã bị khóa' })
-  }
   if (!currentUser) {
     return res.status(StatusCodes.NOT_FOUND).json({ message: 'Số điện thoại chua đăng ký' })
+  }
+
+  if (!currentUser.isActive) {
+    return res.status(StatusCodes.FORBIDDEN).json({ message: 'Tài khoản của bạn đã bị khóa' })
   }
 
   if (!(await bcrypt.compare(password, currentUser.password))) {

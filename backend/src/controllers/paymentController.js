@@ -1,9 +1,9 @@
-import PayOS from "@payos/node";
-import Order from "../models/Order.js";
-import Product from "../models/Product.js";
-import Cart from "../models/Cart.js";
-import { StatusCodes } from "http-status-codes";
-import { env } from "~/config/environment";
+import PayOS from '@payos/node';
+import Order from '../models/Order.js';
+import Product from '../models/Product.js';
+import Cart from '../models/Cart.js';
+import { StatusCodes } from 'http-status-codes';
+import { env } from '~/config/environment';
 
 // Initialize PayOS
 const payOS = new PayOS(
@@ -17,19 +17,21 @@ export const createPaymentLink = async (req, res) => {
   try {
     const userId = req.user._id;
     const { items, total } = req.body;
+    console.log('payOS: ', payOS);
+    
 
     // Validate required fields
     if (!items || !Array.isArray(items) || items.length === 0) {
       return res.status(StatusCodes.BAD_REQUEST).json({
         success: false,
-        message: "Items are required and must be a non-empty array",
+        message: 'Items are required and must be a non-empty array',
       });
     }
 
     if (!total || total <= 0) {
       return res.status(StatusCodes.BAD_REQUEST).json({
         success: false,
-        message: "Total amount must be greater than 0",
+        message: 'Total amount must be greater than 0',
       });
     }
 
@@ -37,9 +39,9 @@ export const createPaymentLink = async (req, res) => {
     const orderCode = Date.now();
 
     // Get client URL from environment or use default
-    const CLIENT_URL = (env.CLIENT_URL || "http://localhost:5173").replace(
+    const CLIENT_URL = (env.CLIENT_URL || 'http://localhost:5173').replace(
       /\/$/,
-      ""
+      ''
     );
 
     // Prepare payment data for PayOS
@@ -48,7 +50,7 @@ export const createPaymentLink = async (req, res) => {
       amount: total,
       description: `Order #${orderCode}`,
       items: items.map((item) => ({
-        name: item.name || "Sản phẩm Pet Spa",
+        name: item.name || 'Sản phẩm Pet Spa',
         quantity: item.quantity || 1,
         price: item.price || 0,
       })),
@@ -68,8 +70,8 @@ export const createPaymentLink = async (req, res) => {
       })),
       total: total,
       orderCode: orderCode.toString(),
-      paymentMethod: "qr",
-      status: "pending",
+      paymentMethod: 'qr',
+      status: 'pending',
     });
 
     await newOrder.save();
@@ -77,7 +79,7 @@ export const createPaymentLink = async (req, res) => {
     // Return success response with checkout URL
     res.status(StatusCodes.OK).json({
       success: true,
-      message: "Payment link created successfully",
+      message: 'Payment link created successfully',
       data: {
         checkoutUrl: paymentLink.checkoutUrl,
         orderCode: orderCode,
@@ -85,10 +87,10 @@ export const createPaymentLink = async (req, res) => {
       },
     });
   } catch (error) {
-    console.error("Payment Error:", error);
+    console.error('Payment Error:', error);
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
       success: false,
-      message: error.message || "Lỗi hệ thống, vui lòng thử lại sau",
+      message: error.message || 'Lỗi hệ thống, vui lòng thử lại sau',
     });
   }
 };
@@ -101,20 +103,20 @@ export const confirmPaymentSuccess = async (req, res) => {
     if (!orderCode) {
       return res.status(StatusCodes.BAD_REQUEST).json({
         success: false,
-        message: "Order code is required",
+        message: 'Order code is required',
       });
     }
 
     // Find the pending order
     const order = await Order.findOne({
       orderCode: orderCode.toString(),
-      status: "pending",
-    }).populate("items.product");
+      status: 'pending',
+    }).populate('items.product');
 
     if (!order) {
       return res.status(StatusCodes.NOT_FOUND).json({
         success: false,
-        message: "Order not found or already processed",
+        message: 'Order not found or already processed',
       });
     }
 
@@ -122,17 +124,17 @@ export const confirmPaymentSuccess = async (req, res) => {
     try {
       const paymentInfo = await payOS.getPaymentLinkInformation(orderCode);
 
-      if (paymentInfo.status !== "PAID") {
+      if (paymentInfo.status !== 'PAID') {
         return res.status(StatusCodes.BAD_REQUEST).json({
           success: false,
-          message: "Payment not confirmed by PayOS",
+          message: 'Payment not confirmed by PayOS',
         });
       }
     } catch (payosError) {
-      console.error("PayOS verification error:", payosError);
+      console.error('PayOS verification error:', payosError);
       return res.status(StatusCodes.BAD_REQUEST).json({
         success: false,
-        message: "Unable to verify payment with PayOS",
+        message: 'Unable to verify payment with PayOS',
       });
     }
 
@@ -141,13 +143,13 @@ export const confirmPaymentSuccess = async (req, res) => {
       if (item.product.stock < item.quantity) {
         return res.status(StatusCodes.BAD_REQUEST).json({
           success: false,
-          message: `Insufficient stock for product "${item.product.name}". Available: ${item.product.stock}, Required: ${item.quantity}`,
+          message: `Insufficient stock for product '${item.product.name}'. Available: ${item.product.stock}, Required: ${item.quantity}`,
         });
       }
     }
 
     // Update order status to paid
-    order.status = "paid";
+    order.status = 'paid';
     order.paidAt = new Date();
     await order.save();
 
@@ -169,7 +171,7 @@ export const confirmPaymentSuccess = async (req, res) => {
 
     res.status(StatusCodes.OK).json({
       success: true,
-      message: "Payment confirmed and order processed successfully",
+      message: 'Payment confirmed and order processed successfully',
       data: {
         orderId: order._id,
         orderCode: order.orderCode,
@@ -178,10 +180,10 @@ export const confirmPaymentSuccess = async (req, res) => {
       },
     });
   } catch (error) {
-    console.error("Confirm Payment Success Error:", error);
+    console.error('Confirm Payment Success Error:', error);
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
       success: false,
-      message: error.message || "Failed to process payment confirmation",
+      message: error.message || 'Failed to process payment confirmation',
     });
   }
 };
@@ -199,10 +201,10 @@ export const getPaymentStatus = async (req, res) => {
       data: paymentInfo,
     });
   } catch (error) {
-    console.error("Get Payment Status Error:", error);
+    console.error('Get Payment Status Error:', error);
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
       success: false,
-      message: error.message || "Không thể lấy thông tin thanh toán",
+      message: error.message || 'Không thể lấy thông tin thanh toán',
     });
   }
 };

@@ -9,8 +9,8 @@ const productSchema = new mongoose.Schema({
   images: [String],
   category: {
     type: String,
-    enum: ['đồ ăn', 'đồ chơi', 'phụ kiện', 'chăm sóc'],
-    default: 'phụ kiện'
+    enum: ['nước rửa chén'],
+    default: 'nước rửa chén'
   },
   ratings: {
     average: { type: Number, default: 0 },
