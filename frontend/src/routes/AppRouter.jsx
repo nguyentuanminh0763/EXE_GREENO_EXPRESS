@@ -16,7 +16,7 @@ import UnauthorizedPage from '~/pages/UnauthorizedPage';
 import ServiceDetailPage from '~/pages/customer/ServiceDetailPage'
 {/* admin */ }
 import ManagerUser from '../pages/admin/managerUser/ManagerUser';
-import UserDetail from "../pages/admin/ManagerUser/UserDetail";
+import UserDetail from "../pages/admin/managerUser/UserDetail";
 import ServiceManager from "../pages/admin/managerService/ManagerService";
 import AddService from "../pages/admin/managerService/AddService";
 import EditService from "../pages/admin/managerService/EditService";
