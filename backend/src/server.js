@@ -39,7 +39,7 @@ const START_SERVER = () => {
   app.use(express.json())
   app.use(morgan('dev'))
   app.use(cors({
-    origin: 'http://localhost:5173',
+    origin: 'https://exegreenoexpressdl1.vercel.app/',
     credentials: true
   }))
   app.use(cookieParser())
